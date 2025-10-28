@@ -1,30 +1,49 @@
 
-import React, { useState } from 'react';
+
+
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Dashboard from './pages/app/Dashboard';
 import Contacts from './pages/app/Contacts';
 import Plans from './pages/app/Plans';
-import ProfilePage from './pages/app/ProfilePage';
 import SettingsPage from './pages/app/SettingsPage';
+import HistoryPage from './pages/app/HistoryPage';
+import OrdersPage from './pages/app/OrdersPage';
 import { useAuth } from './hooks/useAuth';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import WelcomePage from './pages/auth/WelcomePage';
-import { LogoIcon, MenuIcon } from './components/icons/IconComponents';
-import { View, AuthView } from './types';
+import { MenuIcon } from './components/icons/IconComponents';
+import { View, AuthView, SettingsTab } from './types';
 import LoadingPage from './pages/LoadingPage';
 
 const App: React.FC = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isLoggingOut } = useAuth();
   const [activeView, setActiveView] = useState<View>('Dashboard');
+  const [viewPayload, setViewPayload] = useState<any>(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [authView, setAuthView] = useState<AuthView>('welcome');
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!user) {
+      // When user logs out or session expires, reset to the welcome screen.
+      setAuthView('welcome');
+    }
+  }, [user]);
+
+  // While the AuthProvider performs its initial check for a user session,
+  // or when logging out, we display a loading page. This prevents a flicker
+  // and ensures a smooth login/logout experience.
+  if (isLoading || isLoggingOut) {
     return <LoadingPage />;
   }
   
+  const handleNavigation = (view: View, payload: any = null) => {
+    setActiveView(view);
+    setViewPayload(payload);
+  };
+
   if (!user) {
     switch (authView) {
       case 'login':
@@ -42,12 +61,14 @@ const App: React.FC = () => {
         return <Dashboard />;
       case 'Contacts':
         return <Contacts />;
+      case 'Orders':
+        return <OrdersPage />;
       case 'Plans':
         return <Plans />;
-      case 'Profile':
-        return <ProfilePage />;
       case 'Settings':
-        return <SettingsPage />;
+        return <SettingsPage initialTab={viewPayload as SettingsTab | null} setActiveView={handleNavigation} />;
+      case 'History':
+        return <HistoryPage />;
       default:
         return <Dashboard />;
     }
@@ -57,7 +78,7 @@ const App: React.FC = () => {
     <div className="flex h-screen bg-secondary text-foreground overflow-hidden">
       <Sidebar
         activeView={activeView}
-        setActiveView={setActiveView}
+        setActiveView={handleNavigation}
         isOpen={isSidebarOpen}
         setOpen={setSidebarOpen}
         isCollapsed={isSidebarCollapsed}

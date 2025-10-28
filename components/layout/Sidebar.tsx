@@ -1,14 +1,13 @@
 
-
 import React, { useState } from 'react';
-import { DashboardIcon, ContactsIcon, UsersIcon, PlansIcon, LogoIcon, SearchIcon, SettingsIcon, MoonIcon, SunIcon, LogoutIcon, ChevronLeftIcon, ChevronRightIcon } from '../icons/IconComponents';
+import { DashboardIcon, ContactsIcon, UsersIcon, PlansIcon, LogoIcon, SearchIcon, SettingsIcon, MoonIcon, SunIcon, LogoutIcon, ChevronLeftIcon, ChevronRightIcon, HistoryIcon, OrdersIcon } from '../icons/IconComponents';
 import { View } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 
 interface SidebarProps {
   activeView: View;
-  setActiveView: (view: View) => void;
+  setActiveView: (view: View, payload?: any) => void;
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
   isCollapsed: boolean;
@@ -16,8 +15,6 @@ interface SidebarProps {
 }
 
 const NavItem: React.FC<{
-  // FIX: Changed icon type from React.ReactNode to React.ReactElement for proper prop typing with cloneElement.
-  // FIX: Specify props for React.ReactElement to allow cloning with className.
   icon: React.ReactElement<{ className?: string }>;
   label: string;
   isActive: boolean;
@@ -50,8 +47,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isOpen, se
     const { theme, toggleTheme } = useTheme();
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-    const handleNavigation = (view: View) => {
-        setActiveView(view);
+    const handleNavigation = (view: View, payload?: any) => {
+        setActiveView(view, payload);
         if (window.innerWidth < 768) {
           setOpen(false); // Close sidebar on mobile after navigation
         }
@@ -61,6 +58,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isOpen, se
     const navItems: { view: View; icon: React.ReactElement; label: string }[] = [
         { view: 'Dashboard', icon: <DashboardIcon />, label: 'Dashboard' },
         { view: 'Contacts', icon: <ContactsIcon />, label: 'Contacts' },
+        { view: 'Orders', icon: <OrdersIcon />, label: 'Orders' },
+        { view: 'History', icon: <HistoryIcon />, label: 'History' },
         { view: 'Plans', icon: <PlansIcon />, label: 'Plans' },
         { view: 'Settings', icon: <SettingsIcon />, label: 'Settings' },
     ];
@@ -113,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isOpen, se
             <div className="relative">
                 {userMenuOpen && (
                     <div className={`absolute bottom-full left-0 right-0 mb-2 bg-popover rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 p-1 ${isCollapsed ? 'w-48' : ''}`}>
-                        <button onClick={() => handleNavigation('Profile')} className="w-full text-left flex items-center gap-3 px-3 py-2 text-sm rounded-md text-popover-foreground hover:bg-secondary">
+                        <button onClick={() => handleNavigation('Settings', 'Profile')} className="w-full text-left flex items-center gap-3 px-3 py-2 text-sm rounded-md text-popover-foreground hover:bg-secondary">
                             <UsersIcon className="w-5 h-5"/> Profile
                         </button>
                         <button onClick={toggleTheme} className="w-full text-left flex items-center gap-3 px-3 py-2 text-sm rounded-md text-popover-foreground hover:bg-secondary">

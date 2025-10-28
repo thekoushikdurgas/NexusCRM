@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { LogoIcon } from '../../components/icons/IconComponents';
+import { LogoIcon, AlertTriangleIcon } from '../../components/icons/IconComponents';
 import { AuthView } from '../../types';
 
 interface LoginPageProps {
@@ -12,6 +12,7 @@ interface LoginPageProps {
 const LoginPage: React.FC<LoginPageProps> = ({ setAuthView }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { login } = useAuth();
@@ -20,6 +21,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthView }) => {
     e.preventDefault();
     setError('');
     setIsLoggingIn(true);
+    // Note: The AuthProvider already uses localStorage by default,
+    // which persists the session across browser restarts. This aligns
+    // with the "Remember Me" functionality.
     const result = await login(email, password);
     if (!result.success) {
       setError(result.message);
@@ -38,7 +42,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthView }) => {
           <p className="mt-2 text-muted-foreground">Sign in to continue to NexusCRM.</p>
         </div>
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {error && <p className="p-3 text-sm text-center text-red-700 bg-red-400/20 rounded-lg">{error}</p>}
+          {error && (
+            <div className="flex items-start p-3 space-x-2 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg">
+              <AlertTriangleIcon className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+              <p>{error}</p>
+            </div>
+          )}
           <div>
             <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
               Email address
@@ -71,17 +80,42 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthView }) => {
               placeholder="any password for demo"
             />
           </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-muted-foreground">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <button type="button" onClick={() => alert('Forgot password functionality is not yet implemented.')} className="font-medium text-primary-500 hover:underline">
+                Forgot your password?
+              </button>
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={isLoggingIn}
             className="flex items-center justify-center w-full py-3 font-semibold text-white transition-colors duration-200 rounded-lg bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 disabled:cursor-not-allowed"
           >
             {isLoggingIn ? (
-// FIX: Corrected the malformed SVG spinner element.
-              <svg className="w-5 h-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
+              <>
+                <svg className="w-5 h-5 mr-2 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Signing In...</span>
+              </>
             ) : 'Sign In'}
           </button>
         </form>

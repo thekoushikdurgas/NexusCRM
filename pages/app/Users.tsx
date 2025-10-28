@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { User } from '../../types';
 import { supabase } from '../../services/supabase';
@@ -20,6 +19,9 @@ const Users: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { user: currentUser } = useAuth();
+    const [showInviteModal, setShowInviteModal] = useState(false);
+    const [inviteEmail, setInviteEmail] = useState('');
+    const [isInviting, setIsInviting] = useState(false);
 
 
     useEffect(() => {
@@ -49,6 +51,23 @@ const Users: React.FC = () => {
 
         fetchUsers();
     }, []);
+    
+    const handleInvite = async () => {
+      if (!inviteEmail) {
+        alert("Please enter an email address.");
+        return;
+      }
+      setIsInviting(true);
+      const { error } = await supabase.auth.inviteUserByEmail(inviteEmail);
+      setIsInviting(false);
+      if (error) {
+        alert(`Error sending invite: ${error.message}`);
+      } else {
+        alert(`Invite sent to ${inviteEmail}!`);
+        setShowInviteModal(false);
+        setInviteEmail('');
+      }
+    };
 
     const handleRoleChange = async (userId: string, newRole: User['role']) => {
         const originalUsers = [...users];
@@ -65,35 +84,42 @@ const Users: React.FC = () => {
     };
 
     const handleStatusToggle = async (userId: string) => {
-        const originalUsers = [...users];
         const userToUpdate = users.find(user => user.id === userId);
         if (!userToUpdate) return;
         
         const newStatus = !userToUpdate.isActive;
-        const updatedUsers = users.map(user => user.id === userId ? { ...user, isActive: newStatus } : user);
-        setUsers(updatedUsers);
+        const action = newStatus ? 'activate' : 'deactivate';
 
-        const { error } = await supabase.from('profiles').update({ is_active: newStatus }).eq('id', userId);
+        if (window.confirm(`Are you sure you want to ${action} ${userToUpdate.name}?`)) {
+          const originalUsers = [...users];
+          const updatedUsers = users.map(user => user.id === userId ? { ...user, isActive: newStatus } : user);
+          setUsers(updatedUsers);
 
-        if (error) {
-            console.error("Error updating status:", error.message);
-            setUsers(originalUsers); // Revert on error
-            alert("Failed to update user status.");
+          const { error } = await supabase.from('profiles').update({ is_active: newStatus }).eq('id', userId);
+
+          if (error) {
+              console.error("Error updating status:", error.message);
+              setUsers(originalUsers); // Revert on error
+              alert("Failed to update user status.");
+          }
         }
     };
     
     const canManage = currentUser?.role === 'Admin' || currentUser?.role === 'Manager';
 
   return (
-    <div className="bg-card p-4 sm:p-6 rounded-lg shadow-md border border-border">
+    <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 className="text-3xl font-bold text-card-foreground">User Management</h1>
+        <h2 className="text-2xl font-bold text-card-foreground">Team Management</h2>
         {canManage && (
-            <button className="bg-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors">
-            Add User
+            <button onClick={() => setShowInviteModal(true)} className="bg-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors">
+            Invite User
             </button>
         )}
       </div>
+       <p className="text-muted-foreground mb-6 -mt-2">
+        Manage your team members and their account permissions.
+      </p>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left">
@@ -159,6 +185,28 @@ const Users: React.FC = () => {
       {!isLoading && users.length === 0 && (
         <div className="text-center py-10">
             <p className="text-muted-foreground">No users found.</p>
+        </div>
+      )}
+
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
+          <div className="bg-card rounded-lg shadow-xl p-6 w-full max-w-md border border-border">
+            <h3 className="text-xl font-bold mb-4">Invite New User</h3>
+            <p className="text-muted-foreground mb-4">Enter the email of the user you want to invite. They will receive an email with instructions to join.</p>
+            <input 
+              type="email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              placeholder="user@example.com"
+              className="w-full px-3 py-2 mt-1 border bg-background border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            <div className="mt-6 flex justify-end gap-3">
+              <button onClick={() => setShowInviteModal(false)} className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-muted">Cancel</button>
+              <button onClick={handleInvite} disabled={isInviting} className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:bg-primary-400">
+                {isInviting ? 'Sending...' : 'Send Invite'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

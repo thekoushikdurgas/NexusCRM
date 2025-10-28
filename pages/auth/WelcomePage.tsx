@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LogoIcon, ContactsIcon, UsersIcon, DashboardIcon, UploadIcon, ShieldCheckIcon, PlansIcon, ArrowRightIcon } from '../../components/icons/IconComponents';
 import { AuthView } from '../../types';
@@ -12,7 +13,7 @@ const WelcomeHeader: React.FC<WelcomePageProps> = ({ setAuthView }) => (
     <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
       <div className="flex items-center">
         <LogoIcon className="w-10 h-10 text-primary-500" />
-        <span className="ml-3 text-2xl font-bold text-foreground">Appointment360</span>
+        <span className="ml-3 text-2xl font-bold text-foreground">NexusCRM</span>
       </div>
       <div className="flex items-center space-x-2 sm:space-x-4">
         <button
@@ -32,8 +33,6 @@ const WelcomeHeader: React.FC<WelcomePageProps> = ({ setAuthView }) => (
   </header>
 );
 
-// FIX: Changed icon type from React.ReactNode to React.ReactElement for proper prop typing with cloneElement.
-// FIX: Specify props for React.ReactElement to allow cloning with className.
 const FeatureCard: React.FC<{ icon: React.ReactElement<{ className?: string }>; title: string; description: string }> = ({ icon, title, description }) => (
   <div className="bg-card/50 backdrop-blur-sm p-6 rounded-xl border border-border text-center transform transition-transform duration-300 hover:-translate-y-2 flex flex-col items-center">
     <div className="inline-flex items-center justify-center p-3 mb-4 bg-primary/10 rounded-lg">
@@ -55,10 +54,10 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ setAuthView }) => {
       <main className="flex-1 flex flex-col items-center justify-center p-4 z-10 pt-32 pb-16">
         <section className="text-center max-w-4xl">
           <h1 className="text-5xl font-extrabold text-foreground sm:text-6xl md:text-7xl !leading-tight">
-            Your All-in-One <span className="text-primary-500">Appointment & Contact</span> Hub
+            Your <span className="text-primary-500">Nexus</span> for Client Relationships
           </h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-2xl mx-auto">
-            Organize contacts, manage appointments, and grow your business with Appointment360.
+            Streamline your contact management, track interactions, and grow your business with NexusCRM. All your contacts, in one organized place.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-y-4 gap-x-6">
             <button
@@ -121,7 +120,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ setAuthView }) => {
       
       <footer className="w-full py-6 text-center text-muted-foreground z-10 border-t border-border">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center text-sm">
-            <p>&copy; {new Date().getFullYear()} Appointment360. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} NexusCRM. All rights reserved.</p>
             <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
                 <a href="#" className="hover:underline underline-offset-4">Terms of Service</a>
                 <a href="#" className="hover:underline underline-offset-4">Privacy</a>

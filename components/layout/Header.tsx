@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { SearchIcon, BellIcon, MenuIcon, ChevronDownIcon, SunIcon, MoonIcon } from '../icons/IconComponents';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,7 +9,8 @@ import { View } from '../../types';
 interface HeaderProps {
     sidebarOpen: boolean;
     setSidebarOpen: (open: boolean) => void;
-    setActiveView: (view: View) => void;
+    // FIX: Update setActiveView to accept an optional payload for navigating to specific tabs.
+    setActiveView: (view: View, payload?: any) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen, setActiveView }) => {
@@ -56,7 +58,8 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen, setActiveV
             {dropdownOpen && (
                 <div className="absolute right-0 w-48 mt-2 origin-top-right bg-popover rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-20">
                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                        <button onClick={() => { setActiveView('Profile'); setDropdownOpen(false); }} className="w-full text-left block px-4 py-2 text-sm text-popover-foreground hover:bg-secondary" role="menuitem">Profile</button>
+                        {/* FIX: Argument of type '"Profile"' is not assignable to parameter of type 'View'. Navigate to 'Settings' view with 'Profile' as payload. */}
+                        <button onClick={() => { setActiveView('Settings', 'Profile'); setDropdownOpen(false); }} className="w-full text-left block px-4 py-2 text-sm text-popover-foreground hover:bg-secondary" role="menuitem">Profile</button>
                         <button onClick={() => { setActiveView('Settings'); setDropdownOpen(false); }} className="w-full text-left block px-4 py-2 text-sm text-popover-foreground hover:bg-secondary" role="menuitem">Settings</button>
                         <button 
                           onClick={() => {

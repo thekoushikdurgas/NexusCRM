@@ -1,6 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
 import { User } from '../types';
-// FIX: supabase should be imported from the services directory, not from AuthContext.
 import { supabase } from '../services/supabase';
 import { useAuth } from '../hooks/useAuth';
 
@@ -84,15 +84,18 @@ const Users: React.FC = () => {
     const canManage = currentUser?.role === 'Admin' || currentUser?.role === 'Manager';
 
   return (
-    <div className="bg-card p-4 sm:p-6 rounded-lg shadow-md border border-border">
+    <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 className="text-3xl font-bold text-card-foreground">User Management</h1>
+        <h2 className="text-2xl font-bold text-card-foreground">Team Management</h2>
         {canManage && (
             <button className="bg-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors">
             Add User
             </button>
         )}
       </div>
+      <p className="text-muted-foreground mb-6 -mt-2">
+        Manage your team members and their account permissions.
+      </p>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left">
