@@ -1,0 +1,5 @@
+{
+  "name": "NexusCRM - Contact Management System",
+  "description": "A comprehensive web-based contact management system to store, organize, and manage business contacts with advanced features like bulk importing, user management, and analytics tracking, inspired by professional CRMs like HubSpot and Salesforce.",
+  "requestFramePermissions": []
+}
