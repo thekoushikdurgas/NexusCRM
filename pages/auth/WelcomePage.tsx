@@ -33,7 +33,8 @@ const WelcomeHeader: React.FC<WelcomePageProps> = ({ setAuthView }) => (
 );
 
 // FIX: Changed icon type from React.ReactNode to React.ReactElement for proper prop typing with cloneElement.
-const FeatureCard: React.FC<{ icon: React.ReactElement; title: string; description: string }> = ({ icon, title, description }) => (
+// FIX: Specify props for React.ReactElement to allow cloning with className.
+const FeatureCard: React.FC<{ icon: React.ReactElement<{ className?: string }>; title: string; description: string }> = ({ icon, title, description }) => (
   <div className="bg-card/50 backdrop-blur-sm p-6 rounded-xl border border-border text-center transform transition-transform duration-300 hover:-translate-y-2 flex flex-col items-center">
     <div className="inline-flex items-center justify-center p-3 mb-4 bg-primary/10 rounded-lg">
       {React.cloneElement(icon, { className: 'w-8 h-8 text-primary-500' })}

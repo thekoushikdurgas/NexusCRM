@@ -28,6 +28,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     if (error) {
       console.error("Error fetching profile:", error.message);
+      // If fetching profile fails, treat user as logged out to avoid broken state
+      await supabase.auth.signOut();
       setUser(null);
     } else if (profile) {
       const appUser: User = {
@@ -44,27 +46,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    // This function will run once on mount to check the initial auth state.
+    const initializeAuth = async () => {
+      // 1. Check for an existing session on page load.
+      const { data: { session } } = await supabase.auth.getSession();
 
-    // Check active session on initial load
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      // 2. If a session exists, fetch the associated user profile.
       if (session?.user) {
         await fetchUserProfile(session.user);
       } else {
+        // 3. If no session, ensure user state is null.
         setUser(null);
       }
+      
+      // 4. Once the initial check is complete, set loading to false.
       setIsLoading(false);
-    });
+    };
 
-    // Listen for auth state changes
+    initializeAuth();
+
+    // Now, set up the listener for subsequent auth state changes (e.g., login, logout).
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      // This will fire when the user logs in, logs out, or the session is refreshed.
       if (session?.user) {
+        // A user logged in or the session was refreshed.
         await fetchUserProfile(session.user);
       } else {
+        // The user logged out.
         setUser(null);
       }
     });
 
+    // Cleanup the subscription when the component unmounts.
     return () => {
       subscription.unsubscribe();
     };

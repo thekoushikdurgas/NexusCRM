@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { DashboardIcon, ContactsIcon, UsersIcon, PlansIcon, LogoIcon, SearchIcon, SettingsIcon, MoonIcon, SunIcon, LogoutIcon, ChevronLeftIcon, ChevronRightIcon } from '../icons/IconComponents';
 import { View } from '../../types';
@@ -15,7 +17,8 @@ interface SidebarProps {
 
 const NavItem: React.FC<{
   // FIX: Changed icon type from React.ReactNode to React.ReactElement for proper prop typing with cloneElement.
-  icon: React.ReactElement;
+  // FIX: Specify props for React.ReactElement to allow cloning with className.
+  icon: React.ReactElement<{ className?: string }>;
   label: string;
   isActive: boolean;
   onClick: () => void;
@@ -58,7 +61,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isOpen, se
     const navItems: { view: View; icon: React.ReactElement; label: string }[] = [
         { view: 'Dashboard', icon: <DashboardIcon />, label: 'Dashboard' },
         { view: 'Contacts', icon: <ContactsIcon />, label: 'Contacts' },
-        { view: 'Users', icon: <UsersIcon />, label: 'Users' },
         { view: 'Plans', icon: <PlansIcon />, label: 'Plans' },
         { view: 'Settings', icon: <SettingsIcon />, label: 'Settings' },
     ];

@@ -1,5 +1,5 @@
 
-export type View = 'Dashboard' | 'Contacts' | 'Users' | 'Plans' | 'Profile' | 'Settings';
+export type View = 'Dashboard' | 'Contacts' | 'Plans' | 'Profile' | 'Settings';
 export type AuthView = 'welcome' | 'login' | 'register';
 
 export interface Contact {

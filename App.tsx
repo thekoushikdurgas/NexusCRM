@@ -1,11 +1,8 @@
 
-
-
 import React, { useState } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Dashboard from './pages/app/Dashboard';
 import Contacts from './pages/app/Contacts';
-import Users from './pages/app/Users';
 import Plans from './pages/app/Plans';
 import ProfilePage from './pages/app/ProfilePage';
 import SettingsPage from './pages/app/SettingsPage';
@@ -45,8 +42,6 @@ const App: React.FC = () => {
         return <Dashboard />;
       case 'Contacts':
         return <Contacts />;
-      case 'Users':
-        return <Users />;
       case 'Plans':
         return <Plans />;
       case 'Profile':
