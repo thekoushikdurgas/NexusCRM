@@ -1,6 +1,7 @@
 
+
 import React, { useState } from 'react';
-import { DashboardIcon, ContactsIcon, UsersIcon, PlansIcon, LogoIcon, SearchIcon, SettingsIcon, MoonIcon, SunIcon, LogoutIcon, ChevronLeftIcon, ChevronRightIcon, HistoryIcon, OrdersIcon } from '../icons/IconComponents';
+import { DashboardIcon, ContactsIcon, UsersIcon, PlansIcon, LogoIcon, SearchIcon, SettingsIcon, MoonIcon, SunIcon, LogoutIcon, ChevronLeftIcon, ChevronRightIcon, HistoryIcon, OrdersIcon, SparklesIcon } from '../icons/IconComponents';
 import { View } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
@@ -60,6 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isOpen, se
         { view: 'Contacts', icon: <ContactsIcon />, label: 'Contacts' },
         { view: 'Orders', icon: <OrdersIcon />, label: 'Orders' },
         { view: 'History', icon: <HistoryIcon />, label: 'History' },
+        { view: 'AI Assistant', icon: <SparklesIcon />, label: 'AI Assistant' },
         { view: 'Plans', icon: <PlansIcon />, label: 'Plans' },
         { view: 'Settings', icon: <SettingsIcon />, label: 'Settings' },
     ];

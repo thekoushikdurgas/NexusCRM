@@ -1,6 +1,8 @@
 
 
-export type View = 'Dashboard' | 'Contacts' | 'Plans' | 'Settings' | 'History' | 'Orders';
+
+
+export type View = 'Dashboard' | 'Contacts' | 'Plans' | 'Settings' | 'History' | 'Orders' | 'AI Assistant';
 export type AuthView = 'welcome' | 'login' | 'register';
 export type SettingsTab = 'Profile' | 'Appearance' | 'Billing' | 'Team' | 'Security' | 'Notifications';
 
