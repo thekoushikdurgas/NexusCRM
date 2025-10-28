@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Dashboard from './pages/app/Dashboard';
@@ -9,6 +10,7 @@ import Plans from './pages/app/Plans';
 import SettingsPage from './pages/app/SettingsPage';
 import HistoryPage from './pages/app/HistoryPage';
 import OrdersPage from './pages/app/OrdersPage';
+import AIAssistantPage from './pages/app/AIAssistantPage';
 import { useAuth } from './hooks/useAuth';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -69,6 +71,8 @@ const App: React.FC = () => {
         return <SettingsPage initialTab={viewPayload as SettingsTab | null} setActiveView={handleNavigation} />;
       case 'History':
         return <HistoryPage />;
+      case 'AI Assistant':
+        return <AIAssistantPage />;
       default:
         return <Dashboard />;
     }
